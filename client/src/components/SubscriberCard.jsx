@@ -71,7 +71,7 @@ function SubscriberCard({ channelId , avatar, username, fullName, createdAt}) {
           </motion.div>
           
           <motion.button
-            onClick={()=> navigate(`/channel-profile/${channelId}/videos`)}
+            onClick={()=> navigate(`/channel-profile/${channelId}`)}
             className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-blue-700 to-blue-900 text-white px-4 sm:px-6 py-2 rounded-lg font-semibold shadow-md transition-all duration-200 hover:from-blue-500 hover:to-blue-800"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

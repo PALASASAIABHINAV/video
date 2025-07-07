@@ -402,7 +402,7 @@ export default function PlayListDetailedPage() {
                   <div className="ml-4">
                     <motion.div
                       onClick={() =>
-                        navigate(`/channel-profile/${playList.owner._id}/videos`)
+                        navigate(`/channel-profile/${playList.owner._id}`)
                       }
                       className="cursor-pointer"
                       whileHover={{ scale: 1.05 }}

@@ -27,7 +27,7 @@ function ChannelSubscriptionsCard({ channelId, avatar, username, fullName }) {
       });
   };
   const onViewChannel = async (channelId) => {
-    navigate(`/channel-profile/${channelId}/videos`);
+    navigate(`/channel-profile/${channelId}`);
   };
 
   return (

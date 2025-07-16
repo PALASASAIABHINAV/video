@@ -1,40 +1,34 @@
-import React from 'react'
-import VideoGallery from '../../components/gallery/VideoGallery'
-import useInfiniteScroll from '../../components/InfiniteLoading/useInfiniteScroll'
-import { useParams } from 'react-router-dom'
-import { useCallback, useEffect, useState } from 'react'
-import axios from 'axios'
-import ScrollableVideoGallery from '../../components/gallery/ScrollableVideoGallery'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useCallback, useEffect, useState } from 'react';
+import ChannelProfileHeadder from '../../components/ChannelProfileHeadder';
+import useInfiniteScroll from '../../components/InfiniteLoading/useInfiniteScroll';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import ScrollableVideoGallery from '../../components/gallery/ScrollableVideoGallery';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function ChannelVideosPage() {
-   
-  const channelId = useParams().channelId;  
-  !channelId ? console.error("Channel Id not found") : null;
+  const channelId = useParams().channelId;
   const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); // Track if more videos are available
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
 
   const loadMoreVideos = useCallback(async () => {
-    if (!hasMore || loading) return; // Stop if no more videos are available or if already loading
-
+    if (!hasMore || loading) return;
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(`${import.meta.env.VITE_HOST}/api/video/channel`, {
-        params: { page, limit: 6 ,channelId},
+        params: { page, limit: 6, channelId },
         withCredentials: true,
       });
-      const newVideos = response.data.data; // Adjust this based on your API response structure
-      
+      const newVideos = response.data.data;
       if (newVideos.length === 0) {
-        setHasMore(false); // No more videos available
+        setHasMore(false);
       } else {
         setVideos((prevVideos) => {
-          // Prevent duplicate videos
           const videoIds = new Set(prevVideos.map(video => video._id));
           const uniqueNewVideos = newVideos.filter(video => !videoIds.has(video._id));
           return [...prevVideos, ...uniqueNewVideos];
@@ -42,8 +36,7 @@ function ChannelVideosPage() {
         setPage((prevPage) => prevPage + 1);
       }
     } catch (error) {
-      console.log("Error fetching videos:", error);
-      setError("Failed to load videos");
+      setError('Failed to load videos');
     } finally {
       setLoading(false);
       setInitialLoading(false);
@@ -52,7 +45,8 @@ function ChannelVideosPage() {
 
   useEffect(() => {
     loadMoreVideos();
-  },[]); // Only run once on component mount
+    // eslint-disable-next-line
+  }, []);
 
   const [lastElementRef] = useInfiniteScroll(loadMoreVideos);
 
@@ -134,12 +128,7 @@ function ChannelVideosPage() {
   );
 
   return (
-    <motion.div
-      className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-black dark:to-blue-950"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-    >
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-black dark:to-blue-950 overflow-x-hidden overflow-y-auto scrollbar-hide relative">
       {/* Animated background elements */}
       <motion.div
         className="fixed inset-0 pointer-events-none z-0"
@@ -177,42 +166,14 @@ function ChannelVideosPage() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.02)_1px,transparent_1px)] bg-[size:40px_40px] dark:bg-[linear-gradient(rgba(59,130,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.04)_1px,transparent_1px)]" />
       </motion.div>
 
-      {/* Header Section */}
-      <motion.div
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="relative z-10 pt-6 pb-4 px-4 sm:px-6 lg:px-8"
-      >
+      {/* Channel Header Section */}
+      <div className="relative z-10 pt-6 pb-0 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            className="backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl shadow-blue-500/5 dark:shadow-blue-500/10 p-6"
-            whileHover={{ 
-              boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.15)",
-              transform: "translateY(-2px)"
-            }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Channel Videos
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {videos.length} {videos.length === 1 ? 'video' : 'videos'} available
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-          </motion.div>
+          <ChannelProfileHeadder />
         </div>
-      </motion.div>
+      </div>
 
-      {/* Content Section */}
+      {/* Content Section (Videos) */}
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -271,8 +232,8 @@ function ChannelVideosPage() {
           </AnimatePresence>
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
-export default ChannelVideosPage
+export default ChannelVideosPage;

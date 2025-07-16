@@ -38,6 +38,7 @@ import PlayListDetailedPage from './pages/PlayListDetailedPage.jsx'
 import ChangePasswordPage from './pages/channelPages/ChangePasswordPage.jsx'
 import PersonalInfoPage from './pages/channelPages/PersonalInfoPage.jsx'
 import ChannelInfoPage from './pages/channelPages/ChannelInfoPage.jsx'
+import ChannelVideoesFromProfile from './pages/channelPages/ChannelVideoesFromProfile.jsx'
 
 
 

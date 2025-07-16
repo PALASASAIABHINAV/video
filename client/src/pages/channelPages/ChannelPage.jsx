@@ -1,10 +1,20 @@
 // import { useState } from "react";
-import React, { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate, useParams, useLocation } from "react-router-dom";
 import ChannelProfileHeadder from "../../components/ChannelProfileHeadder";
-import Container, { ScrollableContainer } from "../../components/Container";
+import Container from "../../components/Container";
 
 function ChannelPage() {
+  const navigate = useNavigate();
+  const { channelId } = useParams();
+  const location = useLocation();
+
+  useEffect(() => {
+    // If the current path is exactly /channel-profile/:channelId, redirect to videos
+    if (location.pathname === `/channel-profile/${channelId}`) {
+      navigate(`/channel-profile/${channelId}/videos`, { replace: true });
+    }
+  }, [channelId, location.pathname, navigate]);
 
   return (
     <Container>
